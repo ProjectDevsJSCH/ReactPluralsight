@@ -4,8 +4,9 @@ var gulp = require('gulp');
 var connect = require('gulp-connect'); // runs local dev server
 var open = require('gulp-open'); // Open a URL in a web browser
 var browserify = require('browserify'); // Bundle JS
-var reactify = require('reactify'); //
-var source = require('vinyl-source-stream');
+var reactify = require('reactify'); // Transforms React JSX to JS
+var source = require('vinyl-source-stream'); // Use conventional text streams with Gulp
+var concat = require('gulp-concat'); // Concatenate files
 
 
 // Configurations of the gulp file
@@ -15,6 +16,10 @@ var config = {
     paths: {
         html: './src/*.html',
         js: './src/**/*.js',
+        css: [
+            'node_modules/bootstrap/dist/css/bootstrap.min.css',
+            'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
+        ],
         dist: './dist',
         mainJs: './src/main.js'
     }
@@ -65,6 +70,17 @@ gulp.task('js', function() {
 });
 
 
+/*
+ Bundle css using gulp
+and concatenating them with concat 
+*/
+gulp.task('css', function() {
+    gulp.src(config.paths.css)
+        .pipe(concat('bundle.css'))
+        .pipe(gulp.dest(config.paths.dist + '/css'));
+});
+
+
 // Watch the changes made in the html and 
 gulp.task('watch', function() {
     gulp.watch(config.paths.html, ['html']);
@@ -76,4 +92,4 @@ gulp.task('watch', function() {
 Default tasks
 when typing gulp in the console, the 'html' and 'open' tasks will be executed 
  */
-gulp.task('default', ['html', 'js', 'open', 'watch']);
+gulp.task('default', ['html', 'js', 'css', 'open', 'watch']);
