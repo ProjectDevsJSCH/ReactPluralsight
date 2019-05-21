@@ -21,6 +21,7 @@ var config = {
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
             'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
         ],
+        images: './src/images/*',
         dist: './dist',
         mainJs: './src/main.js'
     }
@@ -72,13 +73,28 @@ gulp.task('js', function() {
 
 
 /*
- Bundle css using gulp
+Bundle css using gulp
 and concatenating them with concat 
 */
 gulp.task('css', function() {
     gulp.src(config.paths.css)
         .pipe(concat('bundle.css'))
         .pipe(gulp.dest(config.paths.dist + '/css'));
+});
+
+
+/*
+Migrates images to dist folder
+I could even optimize my images here
+*/
+gulp.task('images', function () {
+    gulp.src(config.paths.images)
+        .pipe(gulp.dest(config.paths.dist + '/images'))
+        .pipe(connect.reload());
+
+    //publish favicon
+    gulp.src('./src/favicon.ico')
+        .pipe(gulp.dest(config.paths.dist));
 });
 
 
@@ -101,4 +117,4 @@ gulp.task('watch', function() {
 Default tasks
 when typing gulp in the console, the 'html' and 'open' tasks will be executed 
  */
-gulp.task('default', ['html', 'js', 'css', 'open', 'watch', 'lint']);
+gulp.task('default', ['html', 'js', 'css', 'images', 'open', 'watch', 'lint']);
